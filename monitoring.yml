@@ -1,0 +1,37 @@
+notifiers:
+
+  - type: sms
+    number: 000000
+
+  - type: email
+    from: XXXXX
+    to: YYYY
+    smtp: ZZZZ
+
+
+timezone: FR
+periodicity: 30min
+sleep:
+  from: "11:00"
+  to: "22:00"
+
+
+checks:
+
+  - type: WebtitleCheck
+    url: https://...
+    title: UUUUUU
+
+  - type: SynapseCheck
+    url: https://
+    port: 1111
+
+  - type: WebContentCheck
+    url: https://
+    content: TTTTTT
+
+  - type: SSHCheck
+    host: PPPP
+    port: 7777
+    key: OOOOOOOOOOO
+  
