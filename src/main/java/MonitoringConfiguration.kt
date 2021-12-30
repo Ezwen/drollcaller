@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeName
 
 
-class Monitoring {
+class MonitoringConfiguration {
     var notifiers: List<Notifier>? = null
     var timezone: String? = null
     var periodicity: String? = null
@@ -74,6 +74,7 @@ object Main {
     fun main(args: Array<String>) {
         val mapper = ObjectMapper(YAMLFactory())
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
-        val user = mapper.readValue(File("./monitoring.yml"), Monitoring::class.java)
+        val user = mapper.readValue(File("./monitoring.yml"), MonitoringConfiguration::class.java)
+
     }
 }
