@@ -6,21 +6,22 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
 class EmailNotifier(
-    var host: String,
-    var port: Int,
-    var enableTLS: Boolean,
-    var userName: String,
-    var password: String,
-    var towards: String
+    private val host: String,
+    private val port: Int,
+    private val enableTLS: Boolean,
+    private val userName: String,
+    private val password: String,
+    private val towards: String,
+    private val from: String,
 ) : Notifier {
-    private fun sendEmail(messageBody: String?) {
+    private fun sendEmail(title: String, messageBody: String) {
         val username = userName
         val password = password
         val props = Properties()
-        props.put("mail.smtp.starttls.enable", enableTLS)
-        props.put("mail.smtp.auth", "true")
-        props.put("mail.smtp.host", host)
-        props.put("mail.smtp.port", port)
+        props["mail.smtp.starttls.enable"] = enableTLS
+        props["mail.smtp.auth"] = "true"
+        props["mail.smtp.host"] = host
+        props["mail.smtp.port"] = port
 
         val session = Session.getInstance(props, object : Authenticator() {
             override fun getPasswordAuthentication(): PasswordAuthentication {
@@ -30,9 +31,9 @@ class EmailNotifier(
 
         try {
             val message: Message = MimeMessage(session)
-            message.setFrom(InternetAddress("noreply@mandragot.org"))
+            message.setFrom(InternetAddress(from))
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(towards))
-            message.setSubject("Monitoring Mandragot")
+            message.setSubject(title)
             message.setText(messageBody)
             Transport.send(message)
             println("Done")
@@ -42,6 +43,6 @@ class EmailNotifier(
     }
 
     override fun notify(message: NotificationMessage) {
-        sendEmail(message.full)
+        sendEmail("Monitoring: " + message.title, message.full)
     }
 }

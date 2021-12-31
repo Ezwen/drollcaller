@@ -1,4 +1,4 @@
-package core
+package configuration
 
 import kotlin.Throws
 import java.io.IOException
@@ -18,8 +18,8 @@ class MonitoringConfiguration {
     var periodicity: String? = null
     var sleep: Sleep? = null
     var checks: List<Check>? = null
+    var timeout: Int = 5000
 }
-
 
 class Sleep {
     var from: String? = null
@@ -27,44 +27,56 @@ class Sleep {
 }
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes(JsonSubTypes.Type(value = SMSNotifier::class), JsonSubTypes.Type(value = EmailNotifier::class))
+@JsonSubTypes(JsonSubTypes.Type(value = FreeSMSNotifier::class), JsonSubTypes.Type(value = EmailNotifier::class))
 interface Notifier
 
 @JsonTypeName("email")
 class EmailNotifier : Notifier {
-    var email: String? = null
     var from: String? = null
     var to: String? = null
-    var smtp: String? = null
+    var smtpHost: String? = null
+    var smtpPort: Int? = null
+    var smtpUserName: String? = null
+    var smtpPassword: String? = null
 }
 
 
-@JsonTypeName("sms")
-class SMSNotifier : Notifier {
-    var number = 0
+@JsonTypeName("freeSMS")
+class FreeSMSNotifier : Notifier {
+    var user: String? = null
+    var password: String? = null
 }
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes(
+    JsonSubTypes.Type(value = SSHCheck::class),
+    JsonSubTypes.Type(value = SynapseCheck::class),
+    JsonSubTypes.Type(value = WebContentCheck::class),
+    JsonSubTypes.Type(value = WebtitleCheck::class)
+)
 interface Check
 
+@JsonTypeName("ssh")
 class SSHCheck : Check {
     var host: String? = null
     var port = 0
     var key: String? = null
 }
 
+@JsonTypeName("synapse")
 class SynapseCheck : Check {
-    var url: String? = null
+    var domain: String? = null
     var port = 0
 }
 
+@JsonTypeName("webContent")
 class WebContentCheck : Check {
     var url: String? = null
     var content: String? = null
 }
 
+@JsonTypeName("webTitle")
 class WebtitleCheck : Check {
-    var type: String? = null
     var url: String? = null
     var title: String? = null
 }

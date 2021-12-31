@@ -8,10 +8,9 @@ import com.jcraft.jsch.JSchException
 import com.jcraft.jsch.Session
 
 
-class SSHChecker(val host: String, val port: Int, val hostKey: String, val timeout: Int) : Checker {
+class SSHChecker(private val host: String, private val port: Int, private val hostKey: String, private val timeout: Int) : Checker {
 
     override fun check(): CheckResult {
-
         val jsch = JSch()
         val knownHostStream: InputStream = ByteArrayInputStream(hostKey.toByteArray(StandardCharsets.UTF_8))
         jsch.setKnownHosts(knownHostStream)

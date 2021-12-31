@@ -1,15 +1,19 @@
 notifiers:
 
-  - type: sms
-    number: 000000
+  - type: freeSMS
+    user: AAA
+    password: BBB
 
   - type: email
     from: XXXXX
     to: YYYY
-    smtp: ZZZZ
+    smtpHost: ZZZZ
+    smtpPort: 1234
+    smtpPassword: 1234
 
 
 timezone: FR
+timeout: 5000
 periodicity: 30min
 sleep:
   from: "11:00"
@@ -18,19 +22,19 @@ sleep:
 
 checks:
 
-  - type: core.WebtitleCheck
+  - type: webTitle
     url: https://...
     title: UUUUUU
 
-  - type: core.SynapseCheck
-    url: https://
+  - type: synapse
+    domain: server.orf
     port: 1111
 
-  - type: core.WebContentCheck
+  - type: webContent
     url: https://
     content: TTTTTT
 
-  - type: core.SSHCheck
+  - type: ssh
     host: PPPP
     port: 7777
     key: OOOOOOOOOOO

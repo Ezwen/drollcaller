@@ -4,29 +4,26 @@ import checkers.Checker
 import notifiers.NotificationMessage
 import notifiers.Notifier
 
-class Monitor (val configuration: MonitoringConfiguration) {
-
-    val checkers : List<Checker> = mutableListOf()
-    val notifiers :  List<Notifier> = mutableListOf()
-
-    init {
-        for (checkerConfiguration in configuration.checks!!) {
-
-
-        }
-    }
+class Monitor(
+    private val checkers: List<Checker>,
+    private val notifiers: List<Notifier>,
+    private val periodicity: String?,
+    private val sleepFrom: String,
+    private val sleepTo: String,
+    private val timezone: String?
+) {
 
 
-    fun loop(configuration: MonitoringConfiguration) {
-        val periodicity : Long = convertPeriodicity(configuration.periodicity) //TODO
+    fun loop() {
+        val periodicity: Long = convertPeriodicity(periodicity) //TODO
 
         while (true) {
-            if (!shouldSleep(configuration.sleep, configuration.timezone)) {
-                runOnce(configuration)
+            if (!shouldSleep(sleepFrom, sleepTo, timezone)) {
+                runOnce()
             }
             Thread.sleep(periodicity)
         }
-        
+
     }
 
     private fun convertPeriodicity(periodicity: String?): Long {
@@ -34,28 +31,24 @@ class Monitor (val configuration: MonitoringConfiguration) {
         //TODO
     }
 
-    private fun shouldSleep(sleep: Sleep?, timezone: String?): Boolean {
+    private fun shouldSleep(sleepFrom: String, sleepTo: String, timezone: String?): Boolean {
         return false //TODO
     }
 
 
-    private fun runOnce(configuration: MonitoringConfiguration) {
+    private fun runOnce() {
 
-        if (configuration.checks != null) {
-            for (checker in this.checkers) {
-                checker.check()
-            }
+        for (checker in this.checkers) {
+            checker.check()
         }
 
-        if (configuration.notifiers != null) {
-            for (notifier in this.notifiers) {
-                notifier.notify(NotificationMessage("TODO title", "TODO summary", "TODO full"))
-            }
+
+        for (notifier in this.notifiers) {
+            notifier.notify(NotificationMessage("TODO title", "TODO summary", "TODO full"))
         }
 
 
     }
-
 
 
 }
