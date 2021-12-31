@@ -18,19 +18,19 @@ sleep:
 
 checks:
 
-  - type: WebtitleCheck
+  - type: core.WebtitleCheck
     url: https://...
     title: UUUUUU
 
-  - type: SynapseCheck
+  - type: core.SynapseCheck
     url: https://
     port: 1111
 
-  - type: WebContentCheck
+  - type: core.WebContentCheck
     url: https://
     content: TTTTTT
 
-  - type: SSHCheck
+  - type: core.SSHCheck
     host: PPPP
     port: 7777
     key: OOOOOOOOOOO

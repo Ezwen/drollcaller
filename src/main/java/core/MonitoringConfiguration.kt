@@ -1,3 +1,5 @@
+package core
+
 import kotlin.Throws
 import java.io.IOException
 import kotlin.jvm.JvmStatic

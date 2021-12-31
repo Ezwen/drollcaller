@@ -1,4 +1,21 @@
-class Monitor {
+package core
+
+import checkers.Checker
+import notifiers.NotificationMessage
+import notifiers.Notifier
+
+class Monitor (val configuration: MonitoringConfiguration) {
+
+    val checkers : List<Checker> = mutableListOf()
+    val notifiers :  List<Notifier> = mutableListOf()
+
+    init {
+        for (checkerConfiguration in configuration.checks!!) {
+
+
+        }
+    }
+
 
     fun loop(configuration: MonitoringConfiguration) {
         val periodicity : Long = convertPeriodicity(configuration.periodicity) //TODO
@@ -25,26 +42,18 @@ class Monitor {
     private fun runOnce(configuration: MonitoringConfiguration) {
 
         if (configuration.checks != null) {
-            for (check in configuration.checks!!) {
-                doCheck(check)
+            for (checker in this.checkers) {
+                checker.check()
             }
         }
 
         if (configuration.notifiers != null) {
-            for (notifier in configuration.notifiers!!) {
-                doNotify(notifier)
+            for (notifier in this.notifiers) {
+                notifier.notify(NotificationMessage("TODO title", "TODO summary", "TODO full"))
             }
         }
 
 
-    }
-    private fun doCheck(check: Check) {
-        //TODO
-    }
-
-
-    private fun doNotify(notifier: Notifier) {
-        //TODO
     }
 
 
