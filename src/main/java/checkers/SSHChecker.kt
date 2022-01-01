@@ -28,4 +28,8 @@ class SSHChecker(private val host: String, private val port: Int, private val ho
         return CheckResult(false, "Impossible, there should have been a connection error.")
     }
 
+    override fun getDescription(): String {
+        return "SSHChecker(host: $host, port:$port, hostKey" //TODO
+    }
+
 }
