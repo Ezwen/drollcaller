@@ -1,14 +1,7 @@
 package configuration
 
-import kotlin.Throws
-import java.io.IOException
-import kotlin.jvm.JvmStatic
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.databind.MapperFeature
-import java.io.File
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
 
 
@@ -83,12 +76,5 @@ class WebtitleCheck : Check {
 
 
 object Main {
-    @Throws(IOException::class)
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val mapper = ObjectMapper(YAMLFactory())
-        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
-        val user = mapper.readValue(File("./monitoring.yml"), MonitoringConfiguration::class.java)
 
-    }
 }

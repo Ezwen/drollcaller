@@ -10,11 +10,12 @@ notifiers:
     smtpHost: ZZZZ
     smtpPort: 1234
     smtpPassword: 1234
+    smtpUserName: "Someone"
 
 
-timezone: FR
+timezone: "Asia/Tokyo"
 timeout: 5000
-periodicity: 30min
+periodicity: 30m
 sleep:
   from: "11:00"
   to: "22:00"

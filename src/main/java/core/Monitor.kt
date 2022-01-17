@@ -4,32 +4,29 @@ import checkers.CheckResult
 import checkers.Checker
 import notifiers.NotificationMessage
 import notifiers.Notifier
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import util.PrettyPrinter
+import util.TimeManagement
+import java.time.*
 import java.time.format.DateTimeFormatter
+import kotlin.time.toKotlinDuration
 
 class Monitor(
     private val checkers: List<Checker>,
     private val notifiers: List<Notifier>,
-    private val periodicity: String,
-    private val sleepFrom: String,
-    private val sleepTo: String,
-    private val timezone: String
+    private val periodicity: Duration,
+    private val sleepFrom: LocalTime,
+    private val sleepTo: LocalTime,
+    private val timeZone: ZoneId
 
 ) {
 
     private var previousResults: MutableMap<Checker, CheckResult> = HashMap<Checker, CheckResult>()
     private var currentResults: MutableMap<Checker, CheckResult> = HashMap<Checker, CheckResult>()
 
-
-    private fun convertPeriodicity(periodicity: String?): Long {
-        return 12
-        //TODO
-    }
-
-    private fun shouldSleep(sleepFrom: String, sleepTo: String, timezone: String?): Boolean {
-        return false //TODO
+    private fun shouldSleep(sleepFrom: LocalTime, sleepTo: LocalTime): Boolean {
+        val instantFrom: Instant = TimeManagement.timeToInstant(sleepFrom, timeZone)
+        val instantTo: Instant = TimeManagement.timeToInstant(sleepTo, timeZone)
+        return Instant.now().isAfter(instantFrom) && Instant.now().isBefore(instantTo)
     }
 
     fun start() {
@@ -45,14 +42,13 @@ class Monitor(
         }
 
         while (true) {
-            if (!shouldSleep(sleepFrom, sleepTo, timezone)) {
+            if (!shouldSleep(sleepFrom, sleepTo)) {
                 runOnce()
             }
-            println("End of monitoring check. Next check in " + periodicity + " ms.")
-            Thread.sleep(periodicity.toLong())
+            println("End of monitoring check. Next check in ${periodicity.toKotlinDuration()}.")
+            Thread.sleep(periodicity.toMillis())
         }
     }
-
 
 
     private fun runOnce() {
@@ -92,7 +88,7 @@ class Monitor(
         if (problems.isNotEmpty()) {
             val intro = "⚠️ Problème(s) détecté(s) ! Les checks suivants ont échoué : "
             summary += intro
-            full += """
+            full += """ a
             $intro
 
             
@@ -101,9 +97,9 @@ class Monitor(
             val problemsDescriptions: MutableList<String> = ArrayList()
             for (checker in problems.keys) {
                 val checkResult: CheckResult = problems[checker]!!
-                problemsNames.add(checker.getDescription())
+                problemsNames.add(PrettyPrinter.toPrettyString(checker))
                 val description =
-                    "'" + checker.getDescription() + "' a échoué avec l'erreur «" + checkResult.message + "»"
+                    "'" + PrettyPrinter.toPrettyString(checker) + "' a échoué avec l'erreur «" + checkResult.message + "»"
                 problemsDescriptions.add(description)
             }
             summary += java.lang.String.join(", ", problemsNames)
@@ -113,7 +109,7 @@ class Monitor(
     }
 
 
-    private fun computeStatus(): MonitoringStatus? {
+    private fun computeStatus(): MonitoringStatus {
 
         val currentProblems = currentResults.filter { r -> !r.value.pass }
         val previousProblems = previousResults.filter { r -> !r.value.pass }
@@ -156,8 +152,7 @@ class Monitor(
 
     private fun getTime(): String? {
         val nowUtc = Instant.now()
-        val france = ZoneId.of("Europe/Paris")
-        val nowInFrance = ZonedDateTime.ofInstant(nowUtc, france)
+        val nowInFrance = ZonedDateTime.ofInstant(nowUtc, timeZone)
         val formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy − HH:mm:ss z")
         return nowInFrance.format(formatter2)
     }
@@ -168,7 +163,6 @@ class Monitor(
             notifier.notify(message)
         }
     }
-
 
 
 }

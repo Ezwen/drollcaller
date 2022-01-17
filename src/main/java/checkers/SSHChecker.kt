@@ -8,7 +8,12 @@ import com.jcraft.jsch.JSchException
 import com.jcraft.jsch.Session
 
 
-class SSHChecker(private val host: String, private val port: Int, private val hostKey: String, private val timeout: Int) : Checker {
+class SSHChecker(
+     val host: String,
+     val port: Int,
+     val hostKey: String,
+     val timeout: Int
+) : Checker {
 
     override fun check(): CheckResult {
         val jsch = JSch()
@@ -28,8 +33,5 @@ class SSHChecker(private val host: String, private val port: Int, private val ho
         return CheckResult(false, "Impossible, there should have been a connection error.")
     }
 
-    override fun getDescription(): String {
-        return "SSHChecker(host: $host, port:$port, hostKey" //TODO
-    }
 
 }

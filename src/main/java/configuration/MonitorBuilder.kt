@@ -3,6 +3,10 @@ package configuration
 import checkers.*
 import core.*
 import notifiers.Notifier
+import java.time.LocalTime
+import java.time.ZoneId
+import kotlin.time.Duration
+import kotlin.time.toJavaDuration
 
 class MonitorBuilder {
 
@@ -19,13 +23,18 @@ class MonitorBuilder {
             notifiers.add(createNotifierFromConfiguration(notifierConfiguration, configuration.timeout))
         }
 
+        val periodicity: java.time.Duration = Duration.parse(configuration.periodicity!!).toJavaDuration()
+        val timeZone = ZoneId.of(configuration.timezone!!)
+        val parsedFrom = LocalTime.parse(configuration.sleep!!.from!!)
+        val parsedTo = LocalTime.parse(configuration.sleep!!.to!!)
+
         return Monitor(
             checkers,
             notifiers,
-            configuration.periodicity,
-            configuration.sleep!!.from!!,
-            configuration.sleep!!.to!!,
-            configuration.timezone
+            periodicity,
+            parsedFrom,
+            parsedTo,
+            timeZone
         )
     }
 

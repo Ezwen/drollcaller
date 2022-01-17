@@ -1,6 +1,6 @@
 package checkers
 
-class WebtitleChecker(private val url: String, private val expectedTitle: String, private val timeout : Int) : Checker {
+class WebtitleChecker(val url: String, val expectedTitle: String, val timeout : Int) : Checker {
 
     override fun check(): CheckResult {
         val driver = SilentHtmlUnitDriver(false, timeout)
