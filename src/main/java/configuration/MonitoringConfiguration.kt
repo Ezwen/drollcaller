@@ -73,8 +73,3 @@ class WebtitleCheck : Check {
     var url: String? = null
     var title: String? = null
 }
-
-
-object Main {
-
-}
