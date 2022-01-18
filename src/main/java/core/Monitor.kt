@@ -16,7 +16,8 @@ class Monitor(
     private val periodicity: Duration,
     private val sleepFrom: LocalTime,
     private val sleepTo: LocalTime,
-    private val timeZone: ZoneId
+    private val timeZone: ZoneId,
+    private val description: String
 
 ) {
 
@@ -30,7 +31,7 @@ class Monitor(
     }
 
     fun start() {
-        println("Start of monitor.")
+        println("Start of monitoring loop for \"$description\".")
 
         if (checkers.isEmpty()) {
             println("ERROR: No configured checkers. Exiting.")
@@ -80,13 +81,13 @@ class Monitor(
         results: Map<Checker, CheckResult>,
         status: MonitoringStatus
     ): NotificationMessage {
-        val oneliner = "Nouvelle situation : $status"
+        val oneliner = "[$description] new situation : $status"
         val beginning = "[" + getTime() + "] " + oneliner + ". "
         var summary: String? = beginning
         var full: String? = beginning
         val problems = results.filter { r -> !r.value.pass }
         if (problems.isNotEmpty()) {
-            val intro = "⚠️ Problème(s) détecté(s) ! Les checks suivants ont échoué : "
+            val intro = "⚠️ Problem detected ! The following checks have failed : "
             summary += intro
             full += """ a
             $intro
@@ -99,7 +100,7 @@ class Monitor(
                 val checkResult: CheckResult = problems[checker]!!
                 problemsNames.add(PrettyPrinter.toPrettyString(checker))
                 val description =
-                    "'" + PrettyPrinter.toPrettyString(checker) + "' a échoué avec l'erreur «" + checkResult.message + "»"
+                    "'" + PrettyPrinter.toPrettyString(checker) + "' failed with this error: «" + checkResult.message + "»"
                 problemsDescriptions.add(description)
             }
             summary += java.lang.String.join(", ", problemsNames)

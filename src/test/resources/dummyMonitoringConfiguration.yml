@@ -13,6 +13,7 @@ notifiers:
     smtpUserName: "Someone"
 
 
+description: "Some monitoring"
 timezone: "Asia/Tokyo"
 timeout: 5000
 periodicity: 30m

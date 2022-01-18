@@ -23,7 +23,7 @@ class EmailNotifier(
         props["mail.smtp.host"] = host
         props["mail.smtp.port"] = port
 
-        val session = Session.getInstance(props, object : Authenticator() {
+        val session: Session = Session.getInstance(props, object : Authenticator() {
             override fun getPasswordAuthentication(): PasswordAuthentication {
                 return PasswordAuthentication(username, password)
             }
@@ -33,16 +33,16 @@ class EmailNotifier(
             val message: Message = MimeMessage(session)
             message.setFrom(InternetAddress(from))
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(towards))
-            message.setSubject(title)
+            message.subject = title
             message.setText(messageBody)
             Transport.send(message)
-            println("Done")
+            println("Email sent.")
         } catch (e: MessagingException) {
             throw RuntimeException(e)
         }
     }
 
     override fun notify(message: NotificationMessage) {
-        sendEmail("Monitoring: " + message.title, message.full)
+        sendEmail(message.title, message.full)
     }
 }

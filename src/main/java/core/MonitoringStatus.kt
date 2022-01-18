@@ -1,13 +1,13 @@
 package core
 
 enum class MonitoringStatus(private val label: String) {
-    NO_PROBLEMS("AUCUN PROBLÈME"),
-    NEW_PROBLEMS("⚠ NOUVEAU(X) PROBLÈME(S)"),
-    SAME_PROBLEMS("⚠ MÊME(S) PROBLÈME(S)"),
+    NO_PROBLEMS("✅️ NO PROBLEM"),
+    NEW_PROBLEMS("⚠ NEW PROBLEM(S)"),
+    SAME_PROBLEMS("⚠ SAME PROBLEM(S)"),
     PROBLEMS_CHANGED(
-        "⚠ PROBLÈME(S) DIFFÉRENT(S)"
+        "⚠ DIFFERENT PROBLEM(S)"
     ),
-    PROBLEMS_SOLVED("🎉 PROBLÈME(S) RÉSOLU(S)");
+    PROBLEMS_SOLVED("🎉 PROBLEM(S) SOLVED");
 
     override fun toString(): String {
         return label

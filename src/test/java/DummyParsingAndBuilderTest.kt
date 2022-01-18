@@ -22,6 +22,7 @@ class DummyParsingAndBuilderTest {
         val result = parse()
         assertNotNull(result)
         assertEquals("Asia/Tokyo", result.timezone)
+        assertEquals("Some monitoring", result.description)
     }
 
     @Test

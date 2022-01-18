@@ -12,6 +12,7 @@ class MonitoringConfiguration {
     var sleep: Sleep? = null
     var checks: List<Check>? = null
     var timeout: Int = 5000
+    var description: String? = null
 }
 
 class Sleep {
