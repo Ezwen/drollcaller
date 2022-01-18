@@ -29,7 +29,7 @@ Local docker image build:
 
 [source]
 ----
-docker build -f docker/Dockerfile -t rocknrollcaller_dev .
+docker build -t rocknrollcaller_dev .
 ----
 
 == Acknowledgments
