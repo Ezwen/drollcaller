@@ -1,9 +1,8 @@
 package rocknrollcaller.notifiers
 
-import rocknrollcaller.util.Logger
 import java.net.URL
 
-class FreeSMSNotifier(var smsUser: String, var smsPass: String, val logger: Logger) : Notifier {
+class FreeSMSNotifier(var smsUser: String, var smsPass: String) : Notifier {
     override fun notify(message: NotificationMessage) {
         val urlString = ("https://smsapi.free-mobile.fr/sendmsg?user=" + smsUser + "&pass=" + smsPass + "&msg="
                 + message.summary)
@@ -12,8 +11,7 @@ class FreeSMSNotifier(var smsUser: String, var smsPass: String, val logger: Logg
             val conn = url.openConnection()
             conn.getInputStream()
         } catch (e: Exception) {
-            logger.log("Could not send SMS because of error:")
-            e.printStackTrace()
+            throw Exception("Could not send SMS because of error: " + e.message, e)
         }
     }
 }

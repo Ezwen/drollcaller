@@ -72,6 +72,7 @@ class Monitor(
 
         for (checker in this.checkers) {
             val result = CheckerRunner.runChecker(checker)
+            logger.log("\"${checker.getDescription()}\" check: ${result.resultAsString()}")
             this.currentResults[checker] = result
         }
 
@@ -132,7 +133,7 @@ class Monitor(
 
 
     private fun sendMessage(message: NotificationMessage) {
-        logger.log("Sending the following message to notifiers: " + message.summary)
+        logger.log("Sending the following message to notifiers: «${message.summary} »")
         for (notifier in notifiers) {
             try {
                 notifier.notify(message)

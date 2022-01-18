@@ -62,8 +62,7 @@ class MonitorBuilder {
 
             is FreeSMSNotifier -> return rocknrollcaller.notifiers.FreeSMSNotifier(
                     notifierConfiguration.user!!,
-                    notifierConfiguration.password!!,
-                    logger
+                    notifierConfiguration.password!!
             )
         }
         throw Error("INVALID NOTIFIER CONFIGURATION")
