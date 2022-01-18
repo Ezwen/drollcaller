@@ -9,4 +9,4 @@ RUN mvn package
 
 FROM docker.io/openjdk:11
 COPY --from=0 /build/target/rocknrollcaller-1.0-SNAPSHOT-jar-with-dependencies.jar /app/rocknrollcaller.jar
-CMD java -jar /app/rocknrollcaller.jar /monitoring-configuration.yml
+CMD java -jar /app/rocknrollcaller.jar /monitoring_configuration.yml
