@@ -8,9 +8,9 @@ steps:
   - name: build
     image: plugins/docker
     settings:
-      username: ezwen
+      username: drone
       password:
-        from_secret: ezwen_passwd
+        from_secret: drone_registry_passwd
       registry: registry.mandragot.org
       repo: registry.mandragot.org/rocknroller
       tags: latest
