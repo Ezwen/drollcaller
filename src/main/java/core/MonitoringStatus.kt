@@ -2,10 +2,10 @@ package core
 
 enum class MonitoringStatus(private val label: String) {
     NO_PROBLEMS("✅️ NO PROBLEM"),
-    NEW_PROBLEMS("⚠ NEW PROBLEM(S)"),
-    SAME_PROBLEMS("⚠ SAME PROBLEM(S)"),
+    NEW_PROBLEMS("⚠️ NEW PROBLEM(S)"),
+    SAME_PROBLEMS("⚠️ SAME PROBLEM(S)"),
     PROBLEMS_CHANGED(
-        "⚠ DIFFERENT PROBLEM(S)"
+        "⚠️ DIFFERENT PROBLEM(S)"
     ),
     PROBLEMS_SOLVED("🎉 PROBLEM(S) SOLVED");
 

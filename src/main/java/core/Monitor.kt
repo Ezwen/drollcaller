@@ -81,7 +81,7 @@ class Monitor(
         results: Map<Checker, CheckResult>,
         status: MonitoringStatus
     ): NotificationMessage {
-        val oneliner = "[$description] new situation : $status"
+        val oneliner = "[$description] New situation : $status"
         val beginning = "[" + getTime() + "] " + oneliner + ". "
         var summary: String? = beginning
         var full: String? = beginning

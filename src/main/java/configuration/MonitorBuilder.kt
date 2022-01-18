@@ -20,7 +20,7 @@ class MonitorBuilder {
 
         val notifiers = mutableListOf<Notifier>()
         for (notifierConfiguration in configuration.notifiers!!) {
-            notifiers.add(createNotifierFromConfiguration(notifierConfiguration, configuration.timeout))
+            notifiers.add(createNotifierFromConfiguration(notifierConfiguration))
         }
 
         val periodicity: java.time.Duration = Duration.parse(configuration.periodicity!!).toJavaDuration()
@@ -34,16 +34,16 @@ class MonitorBuilder {
             periodicity,
             parsedFrom,
             parsedTo,
-            timeZone
+            timeZone,
+            configuration.description!!
         )
     }
 
     private fun createNotifierFromConfiguration(
-        notifierConfiguration: configuration.Notifier,
-        timeout: Int
-    ): notifiers.Notifier {
+        notifierConfiguration: configuration.Notifier
+    ): Notifier {
         when (notifierConfiguration) {
-            is configuration.EmailNotifier -> return notifiers.EmailNotifier(
+            is EmailNotifier -> return notifiers.EmailNotifier(
                 notifierConfiguration.smtpHost!!,
                 notifierConfiguration.smtpPort!!,
                 true,
@@ -52,7 +52,7 @@ class MonitorBuilder {
                 notifierConfiguration.from!!
             )
 
-            is configuration.FreeSMSNotifier -> return notifiers.FreeSMSNotifier(
+            is FreeSMSNotifier -> return notifiers.FreeSMSNotifier(
                 notifierConfiguration.user!!,
                 notifierConfiguration.password!!
             )
