@@ -1,0 +1,61 @@
+# Description of the monitoring 
+description: "Some monitoring"
+
+# Time zone to use to properly parse times and print logs
+timezone: "Asia/Tokyo"
+
+# Global timeout value to use when doing a checking action (passed to all checkers)
+timeout: 5000
+
+# Duration between two periodic monitoring checks
+periodicity: 30m
+
+# (Optional) Disable monitoring during specific times (eg. daily periodic maintenance tasks)
+sleep:
+  from: "11:00"
+  to: "22:00"
+
+# List of all the checks to perform in each period
+checks:
+
+  # Check that a web page is up, and with the correct title
+  - type: webTitle
+    description: "Check web page title mywebsite.org"
+    url: "https://mywebsite.org"
+    title: "A nice title"
+
+  # Check that a web page is up server is up on a specific port
+  - type: webContent
+    description: "Check content myotherwebsite.org"
+    url: "https://myotherwebsite.org"
+    content: "Some specific content"
+
+  # Check that a Synapse matrix server is up on a specific port
+  - type: synapse
+    description: "Check synapse server.org (port 1111)"
+    domain: "server.org"
+    port: 1111
+
+  # Check that an ssh server is listebing on a specific port, and verifies that it exposes some expected public crypto key
+  - type: ssh
+    description: "Check ssh server myotherwebsite.org (port 7777)"
+    host: myotherwebsite.org
+    port: 7777
+    key: OOOOOOOOOOO
+  
+# List of all the notification systems to use to inform that some check has failed
+notifiers:
+
+  # Uses some given SMTP server to send an email to a given email address
+  - type: email
+    from: XXXXX
+    to: YYYY
+    smtpHost: smtp.myserver.org
+    smtpPort: 1234
+    smtpPassword: HHHHHHHHH
+    smtpUserName: "Someone"
+
+  # Uses the web service from the French provider "Free" to send a mobile text message to a specific Free user
+  - type: freeSMS
+    user: AAA
+    password: BBB
