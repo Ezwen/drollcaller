@@ -14,6 +14,24 @@ TODO
 
 TODO
 
+=== Maven
+
+Local maven build:
+
+[source]
+----
+mvn package
+----
+
+=== Docker
+
+Local docker image build:
+
+[source]
+----
+docker build -f docker/Dockerfile -t rocknrollcaller_dev .
+----
+
 == Acknowledgments
 
 TODO
