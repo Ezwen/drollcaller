@@ -1,37 +1,35 @@
-= Rocknrollcaller
+# Rocknrollcaller
 
 Very simple monitoring of online services.
 
-== Installation
+## Installation
 
 TODO
 
-== Usage
+## Usage
 
 TODO
 
-== Development
+## Development
 
 TODO
 
-=== Maven
+### Maven
 
 Local maven build:
 
-[source]
-----
+```
 mvn package
-----
+```
 
-=== Docker
+### Docker
 
 Local docker image build:
 
-[source]
-----
+```
 docker build -t rocknrollcaller_dev .
-----
+```
 
-== Acknowledgments
+## Acknowledgments
 
 TODO
