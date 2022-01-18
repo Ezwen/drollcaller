@@ -9,12 +9,12 @@ import com.jcraft.jsch.Session
 
 
 class SSHChecker(
-    description: String,
+    val descript: String,
     val host: String,
     val port: Int,
     val hostKey: String,
     val timeout: Int
-) : Checker(description) {
+) : Checker {
 
     override fun check(): CheckResult {
         val jsch = JSch()
@@ -32,6 +32,10 @@ class SSHChecker(
             }
         }
         return CheckResult(false, "Impossible, there should have been a connection error.")
+    }
+
+    override fun getDescription(): String {
+        return descript
     }
 
 

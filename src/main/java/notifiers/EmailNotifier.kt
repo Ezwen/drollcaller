@@ -1,5 +1,6 @@
 package notifiers
 
+import util.Logger
 import java.util.*
 import javax.mail.*
 import javax.mail.internet.InternetAddress
@@ -13,6 +14,7 @@ class EmailNotifier(
     private val password: String,
     private val towards: String,
     private val from: String,
+    private val logger: Logger
 ) : Notifier {
     private fun sendEmail(title: String, messageBody: String) {
         val username = userName
@@ -36,7 +38,7 @@ class EmailNotifier(
             message.subject = title
             message.setText(messageBody)
             Transport.send(message)
-            println("Email sent.")
+            logger.log("Email sent.")
         } catch (e: MessagingException) {
             throw RuntimeException(e)
         }

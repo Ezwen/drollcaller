@@ -1,9 +1,9 @@
 package checkers
 
 class WebContentChecker(
-    description: String,
+    val descript: String,
     val url: String, val expectedContent: String, val timeout: Int
-) : Checker(description) {
+) : Checker {
 
     override fun check(): CheckResult {
         val driver = SilentHtmlUnitDriver(false, timeout)
@@ -15,5 +15,8 @@ class WebContentChecker(
         } else {
             CheckResult(false, "The content of the web page is not the one expected: $content")
         }
+    }
+    override fun getDescription(): String {
+        return descript
     }
 }

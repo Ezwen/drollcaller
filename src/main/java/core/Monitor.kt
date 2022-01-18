@@ -4,6 +4,7 @@ import checkers.CheckResult
 import checkers.Checker
 import notifiers.NotificationMessage
 import notifiers.Notifier
+import util.Logger
 import util.TimeManagement
 import java.time.Duration
 import java.time.Instant
@@ -18,7 +19,8 @@ class Monitor(
     private val sleepFrom: LocalTime,
     private val sleepTo: LocalTime,
     private val timeZone: ZoneId,
-    private val description: String
+    private val description: String,
+    private val logger: Logger
 
 ) {
 
@@ -32,22 +34,22 @@ class Monitor(
     }
 
     fun start() {
-        println("Start of monitoring loop for \"$description\".")
+        logger.log("Start of monitor \"$description\".")
 
         if (checkers.isEmpty()) {
-            println("ERROR: No configured checkers. Exiting.")
+            logger.log("ERROR: No configured checkers. Exiting.")
             return
         }
 
         if (notifiers.isEmpty()) {
-            println("WARNING: No configured notifiers.")
+            logger.log("WARNING: No configured notifiers.")
         }
 
         while (true) {
             if (!shouldSleep(sleepFrom, sleepTo)) {
                 runOnce()
             }
-            println("End of monitoring check. Next check in ${periodicity.toKotlinDuration()}.")
+            logger.log("End of monitoring check. Next check in ${periodicity.toKotlinDuration()}.")
             Thread.sleep(periodicity.toMillis())
         }
     }
@@ -55,7 +57,7 @@ class Monitor(
 
     private fun runOnce() {
 
-        println("[" + TimeManagement.getTime(timeZone) + "] Start monitoring check…")
+        logger.log("Start periodic monitoring check…")
 
         this.previousResults = this.currentResults
         this.currentResults = HashMap<Checker, CheckResult>()
@@ -67,13 +69,13 @@ class Monitor(
 
         val status = computeStatus()
 
-        println("The current status is: $status")
+        logger.log("The current status is: $status")
         when (status) {
             MonitoringStatus.NEW_PROBLEMS, MonitoringStatus.PROBLEMS_CHANGED, MonitoringStatus.PROBLEMS_SOLVED -> {
-                println("The status changed, sending new notification.")
+                logger.log("The status changed, sending new notification.")
                 sendMessage(MessageBuilder.createMessage(description, currentResults, status, timeZone))
             }
-            MonitoringStatus.SAME_PROBLEMS, MonitoringStatus.NO_PROBLEMS -> println("The status did not change, nothing to do.")
+            MonitoringStatus.SAME_PROBLEMS, MonitoringStatus.NO_PROBLEMS -> logger.log("The status did not change, nothing to do.")
         }
 
     }
@@ -122,7 +124,7 @@ class Monitor(
 
 
     private fun sendMessage(message: NotificationMessage) {
-        println("Sending the following message to notifiers: " + message.summary)
+        logger.log("Sending the following message to notifiers: " + message.summary)
         for (notifier in notifiers) {
             notifier.notify(message)
         }

@@ -1,9 +1,9 @@
 package checkers
 
 class WebtitleChecker(
-    description: String,
+    val descript: String,
     val url: String, val expectedTitle: String, val timeout: Int
-) : Checker(description) {
+) : Checker {
 
     override fun check(): CheckResult {
         val driver = SilentHtmlUnitDriver(false, timeout)
@@ -15,5 +15,8 @@ class WebtitleChecker(
         } else {
             CheckResult(false, "The title of the web page is not the one expected: $title")
         }
+    }
+    override fun getDescription(): String {
+        return descript
     }
 }

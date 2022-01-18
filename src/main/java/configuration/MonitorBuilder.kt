@@ -3,6 +3,7 @@ package configuration
 import checkers.*
 import core.*
 import notifiers.Notifier
+import util.Logger
 import java.time.LocalTime
 import java.time.ZoneId
 import kotlin.time.Duration
@@ -13,6 +14,9 @@ class MonitorBuilder {
 
     fun createMonitorFromConfiguration(configuration: MonitoringConfiguration): Monitor {
 
+        val timeZone = ZoneId.of(configuration.timezone!!)
+        val logger = Logger(timeZone)
+
         val checkers = mutableListOf<Checker>()
         for (checkerConfiguration in configuration.checks!!) {
             checkers.add(createCheckerFromConfiguration(checkerConfiguration, configuration.timeout))
@@ -20,11 +24,11 @@ class MonitorBuilder {
 
         val notifiers = mutableListOf<Notifier>()
         for (notifierConfiguration in configuration.notifiers!!) {
-            notifiers.add(createNotifierFromConfiguration(notifierConfiguration))
+            notifiers.add(createNotifierFromConfiguration(notifierConfiguration,logger))
         }
 
         val periodicity: java.time.Duration = Duration.parse(configuration.periodicity!!).toJavaDuration()
-        val timeZone = ZoneId.of(configuration.timezone!!)
+
         val parsedFrom = LocalTime.parse(configuration.sleep!!.from!!)
         val parsedTo = LocalTime.parse(configuration.sleep!!.to!!)
 
@@ -35,12 +39,13 @@ class MonitorBuilder {
             parsedFrom,
             parsedTo,
             timeZone,
-            configuration.description!!
+            configuration.description!!,
+            logger
         )
     }
 
     private fun createNotifierFromConfiguration(
-        notifierConfiguration: configuration.Notifier
+        notifierConfiguration: configuration.Notifier, logger: Logger
     ): Notifier {
         when (notifierConfiguration) {
             is EmailNotifier -> return notifiers.EmailNotifier(
@@ -49,12 +54,14 @@ class MonitorBuilder {
                 true,
                 notifierConfiguration.smtpUserName!!,
                 notifierConfiguration.smtpPassword!!, notifierConfiguration.to!!,
-                notifierConfiguration.from!!
+                notifierConfiguration.from!!,
+                logger
             )
 
             is FreeSMSNotifier -> return notifiers.FreeSMSNotifier(
                 notifierConfiguration.user!!,
-                notifierConfiguration.password!!
+                notifierConfiguration.password!!,
+                logger
             )
         }
         throw Error("INVALID NOTIFIER CONFIGURATION")

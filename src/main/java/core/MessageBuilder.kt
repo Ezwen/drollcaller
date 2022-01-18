@@ -23,7 +23,7 @@ object MessageBuilder {
         val problems: Map<Checker, CheckResult> = results.filter { r -> !r.value.pass }
         if (problems.isNotEmpty()) {
             val problemsDescription = problemsToDescription(problems)
-            val intro = "⚠️ Problem detected ! The following checks have failed: ${problemsDescription.summary}"
+            val intro = "Problem(s) detected ! The following check(s) failed: ${problemsDescription.summary}"
             summary += intro
             full += "\n\n$intro\n\nDetails below:\n\n"
             full += problemsDescription.full
@@ -36,7 +36,7 @@ object MessageBuilder {
         val problemsDescriptions: MutableList<String> = ArrayList()
         for (checker in problems.keys) {
             val checkResult: CheckResult = problems[checker]!!
-            problemsNames.add(checker.description)
+            problemsNames.add(checker.getDescription())
             val description =
                 "'" + PrettyPrinter.toPrettyString(checker) + "' failed with this error: «" + checkResult.message + "»"
             problemsDescriptions.add(description)

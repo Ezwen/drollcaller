@@ -1,3 +1,5 @@
+package test
+
 import checkers.CheckResult
 import checkers.Checker
 import checkers.WebContentChecker

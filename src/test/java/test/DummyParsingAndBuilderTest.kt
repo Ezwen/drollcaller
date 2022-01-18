@@ -1,3 +1,5 @@
+package test
+
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import configuration.MonitorBuilder
@@ -9,7 +11,7 @@ import kotlin.test.assertNotNull
 class DummyParsingAndBuilderTest {
     private fun parse(): MonitoringConfiguration? {
         val mapper = YAMLMapper.builder().enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES).build()
-        val yamlContent: String = getResourceContent("dummyMonitoringConfiguration.yml")
+        val yamlContent: String = getResourceContent("../dummyMonitoringConfiguration.yml")
         return mapper.readValue(yamlContent, MonitoringConfiguration::class.java)
     }
 
