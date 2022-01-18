@@ -1,5 +1,6 @@
 package rocknrollcaller.core
 
+import rocknrollcaller.checkers.CheckerRunner
 import rocknrollcaller.notifiers.NotificationMessage
 import rocknrollcaller.util.Logger
 import rocknrollcaller.util.TimeManagement
@@ -10,26 +11,31 @@ import java.time.ZoneId
 import kotlin.time.toKotlinDuration
 
 class Monitor(
-    private val checkers: List<rocknrollcaller.checkers.Checker>,
-    private val notifiers: List<rocknrollcaller.notifiers.Notifier>,
-    private val periodicity: Duration,
-    private val sleepFrom: LocalTime,
-    private val sleepTo: LocalTime,
-    private val timeZone: ZoneId,
-    private val description: String,
-    private val logger: Logger
+        private val checkers: List<rocknrollcaller.checkers.Checker>,
+        private val notifiers: List<rocknrollcaller.notifiers.Notifier>,
+        private val periodicity: Duration,
+        private val sleepFrom: LocalTime?,
+        private val sleepTo: LocalTime?,
+        private val timeZone: ZoneId,
+        private val description: String,
+        private val logger: Logger
 
 ) {
 
     private var previousResults: MutableMap<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult> =
-        HashMap<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>()
+            HashMap<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>()
     private var currentResults: MutableMap<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult> =
-        HashMap<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>()
+            HashMap<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>()
 
-    private fun shouldSleep(sleepFrom: LocalTime, sleepTo: LocalTime): Boolean {
-        val instantFrom: Instant = TimeManagement.timeToInstant(sleepFrom, timeZone)
-        val instantTo: Instant = TimeManagement.timeToInstant(sleepTo, timeZone)
-        return Instant.now().isAfter(instantFrom) && Instant.now().isBefore(instantTo)
+    private fun shouldSleep(sleepFrom: LocalTime?, sleepTo: LocalTime?): Boolean {
+        return if (sleepFrom != null && sleepTo != null) {
+            val instantFrom: Instant = TimeManagement.timeToInstant(sleepFrom, timeZone)
+            val instantTo: Instant = TimeManagement.timeToInstant(sleepTo, timeZone)
+            Instant.now().isAfter(instantFrom) && Instant.now().isBefore(instantTo)
+        } else {
+            false
+        }
+
     }
 
     fun start() {
@@ -47,11 +53,11 @@ class Monitor(
         while (true) {
             logger.log("Waking up.")
             if (!shouldSleep(sleepFrom, sleepTo)) {
-                logger.log("Start periodic monitoring check…")
+                logger.log("Start periodic monitoring checks…")
                 runOnce()
-                logger.log("End of periodic monitoring check.")
+                logger.log("End of periodic monitoring checks.")
             } else {
-                logger.log("\uD83D\uDCA4️ In a sleeping period, not starting check.")
+                logger.log("\uD83D\uDCA4️ In a sleeping period, not starting checsk.")
             }
             logger.log("Falling asleep. Next wakeup in ${periodicity.toKotlinDuration()}.")
             Thread.sleep(periodicity.toMillis())
@@ -61,12 +67,11 @@ class Monitor(
 
     private fun runOnce() {
 
-
         this.previousResults = this.currentResults
-        this.currentResults = HashMap<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>()
+        this.currentResults = HashMap()
 
         for (checker in this.checkers) {
-            val result = checker.check()
+            val result = CheckerRunner.runChecker(checker)
             this.currentResults[checker] = result
         }
 
@@ -110,8 +115,8 @@ class Monitor(
     }
 
     private fun compareProblems(
-        previousResults: Map<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>,
-        currentResults: Map<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>
+            previousResults: Map<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>,
+            currentResults: Map<rocknrollcaller.checkers.Checker, rocknrollcaller.checkers.CheckResult>
     ): Boolean {
         if (previousResults.size == currentResults.size) {
             for (checker in previousResults.keys) {
@@ -129,7 +134,12 @@ class Monitor(
     private fun sendMessage(message: NotificationMessage) {
         logger.log("Sending the following message to notifiers: " + message.summary)
         for (notifier in notifiers) {
-            notifier.notify(message)
+            try {
+                notifier.notify(message)
+            } catch (e: Throwable) {
+                logger.error("Error while using notifier \"${notifier::class.simpleName}\"")
+                logger.error(e)
+            }
         }
     }
 

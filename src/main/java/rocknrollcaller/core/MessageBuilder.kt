@@ -36,7 +36,7 @@ object MessageBuilder {
             val checkResult: rocknrollcaller.checkers.CheckResult = problems[checker]!!
             problemsNames.add(checker.getDescription())
             val description =
-                "'" + PrettyPrinter.toPrettyString(checker) + "' failed with this error: «" + checkResult.message + "»"
+                "'" + PrettyPrinter.prettyObject(checker) + "' failed with this error: «" + checkResult.message + "»"
             problemsDescriptions.add(description)
         }
         val summary = java.lang.String.join(", ", problemsNames)
