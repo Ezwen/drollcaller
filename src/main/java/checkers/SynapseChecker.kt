@@ -2,7 +2,10 @@ package checkers
 
 import com.google.gson.JsonParser
 
-class SynapseChecker(val domain: String, val port: Int, val timeout : Int) : Checker {
+class SynapseChecker(
+    description: String,
+    val domain: String, val port: Int, val timeout: Int
+) : Checker(description) {
     override fun check(): CheckResult {
         val driver = SilentHtmlUnitDriver(false, timeout)
         driver.get("https://$domain:$port/_matrix/federation/v1/version")

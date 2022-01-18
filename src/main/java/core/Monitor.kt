@@ -4,10 +4,11 @@ import checkers.CheckResult
 import checkers.Checker
 import notifiers.NotificationMessage
 import notifiers.Notifier
-import util.PrettyPrinter
 import util.TimeManagement
-import java.time.*
-import java.time.format.DateTimeFormatter
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalTime
+import java.time.ZoneId
 import kotlin.time.toKotlinDuration
 
 class Monitor(
@@ -54,7 +55,7 @@ class Monitor(
 
     private fun runOnce() {
 
-        println("[" + getTime() + "] Start monitoring check…")
+        println("[" + TimeManagement.getTime(timeZone) + "] Start monitoring check…")
 
         this.previousResults = this.currentResults
         this.currentResults = HashMap<Checker, CheckResult>()
@@ -70,43 +71,11 @@ class Monitor(
         when (status) {
             MonitoringStatus.NEW_PROBLEMS, MonitoringStatus.PROBLEMS_CHANGED, MonitoringStatus.PROBLEMS_SOLVED -> {
                 println("The status changed, sending new notification.")
-                sendMessage(createMessage(currentResults, status))
+                sendMessage(MessageBuilder.createMessage(description, currentResults, status, timeZone))
             }
             MonitoringStatus.SAME_PROBLEMS, MonitoringStatus.NO_PROBLEMS -> println("The status did not change, nothing to do.")
         }
 
-    }
-
-    private fun createMessage(
-        results: Map<Checker, CheckResult>,
-        status: MonitoringStatus
-    ): NotificationMessage {
-        val oneliner = "[$description] New situation : $status"
-        val beginning = "[" + getTime() + "] " + oneliner + ". "
-        var summary: String? = beginning
-        var full: String? = beginning
-        val problems = results.filter { r -> !r.value.pass }
-        if (problems.isNotEmpty()) {
-            val intro = "⚠️ Problem detected ! The following checks have failed : "
-            summary += intro
-            full += """ a
-            $intro
-
-            
-            """.trimIndent()
-            val problemsNames: MutableList<String> = ArrayList()
-            val problemsDescriptions: MutableList<String> = ArrayList()
-            for (checker in problems.keys) {
-                val checkResult: CheckResult = problems[checker]!!
-                problemsNames.add(PrettyPrinter.toPrettyString(checker))
-                val description =
-                    "'" + PrettyPrinter.toPrettyString(checker) + "' failed with this error: «" + checkResult.message + "»"
-                problemsDescriptions.add(description)
-            }
-            summary += java.lang.String.join(", ", problemsNames)
-            full += java.lang.String.join("\n\n", problemsDescriptions)
-        }
-        return NotificationMessage(oneliner, summary!!, full!!)
     }
 
 
@@ -151,12 +120,6 @@ class Monitor(
 
     }
 
-    private fun getTime(): String? {
-        val nowUtc = Instant.now()
-        val nowInFrance = ZonedDateTime.ofInstant(nowUtc, timeZone)
-        val formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy − HH:mm:ss z")
-        return nowInFrance.format(formatter2)
-    }
 
     private fun sendMessage(message: NotificationMessage) {
         println("Sending the following message to notifiers: " + message.summary)

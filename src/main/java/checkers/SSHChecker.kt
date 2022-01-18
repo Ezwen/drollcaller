@@ -9,11 +9,12 @@ import com.jcraft.jsch.Session
 
 
 class SSHChecker(
-     val host: String,
-     val port: Int,
-     val hostKey: String,
-     val timeout: Int
-) : Checker {
+    description: String,
+    val host: String,
+    val port: Int,
+    val hostKey: String,
+    val timeout: Int
+) : Checker(description) {
 
     override fun check(): CheckResult {
         val jsch = JSch()

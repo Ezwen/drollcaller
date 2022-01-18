@@ -48,29 +48,31 @@ class FreeSMSNotifier : Notifier {
     JsonSubTypes.Type(value = WebContentCheck::class),
     JsonSubTypes.Type(value = WebtitleCheck::class)
 )
-interface Check
+open class Check {
+    var description : String? = null
+}
 
 @JsonTypeName("ssh")
-class SSHCheck : Check {
+class SSHCheck : Check() {
     var host: String? = null
     var port = 0
     var key: String? = null
 }
 
 @JsonTypeName("synapse")
-class SynapseCheck : Check {
+class SynapseCheck : Check() {
     var domain: String? = null
     var port = 0
 }
 
 @JsonTypeName("webContent")
-class WebContentCheck : Check {
+class WebContentCheck : Check() {
     var url: String? = null
     var content: String? = null
 }
 
 @JsonTypeName("webTitle")
-class WebtitleCheck : Check {
+class WebtitleCheck : Check() {
     var url: String? = null
     var title: String? = null
 }

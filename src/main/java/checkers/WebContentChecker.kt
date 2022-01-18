@@ -1,6 +1,9 @@
 package checkers
 
-class WebContentChecker(val url: String, val expectedContent: String, val timeout : Int) : Checker {
+class WebContentChecker(
+    description: String,
+    val url: String, val expectedContent: String, val timeout: Int
+) : Checker(description) {
 
     override fun check(): CheckResult {
         val driver = SilentHtmlUnitDriver(false, timeout)

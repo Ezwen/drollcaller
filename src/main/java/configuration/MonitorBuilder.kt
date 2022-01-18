@@ -63,20 +63,24 @@ class MonitorBuilder {
     private fun createCheckerFromConfiguration(checkerConfiguration: Check, timeout: Int): Checker {
         when (checkerConfiguration) {
             is SSHCheck -> return SSHChecker(
-                checkerConfiguration.host!!, checkerConfiguration.port!!,
+                checkerConfiguration.description!!,
+                checkerConfiguration.host!!, checkerConfiguration.port,
                 checkerConfiguration.key!!, timeout
             )
             is SynapseCheck -> return SynapseChecker(
+                checkerConfiguration.description!!,
                 checkerConfiguration.domain!!,
-                checkerConfiguration.port!!,
+                checkerConfiguration.port,
                 timeout
             )
             is WebContentCheck -> return WebContentChecker(
+                checkerConfiguration.description!!,
                 checkerConfiguration.url!!,
                 checkerConfiguration.content!!,
                 timeout
             )
             is WebtitleCheck -> return WebtitleChecker(
+                checkerConfiguration.description!!,
                 checkerConfiguration.url!!,
                 checkerConfiguration.title!!,
                 timeout

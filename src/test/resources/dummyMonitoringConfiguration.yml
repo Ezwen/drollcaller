@@ -25,18 +25,22 @@ sleep:
 checks:
 
   - type: webTitle
+    description: "Check1"
     url: https://...
     title: UUUUUU
 
   - type: synapse
-    domain: server.orf
+    description: "Check2"
+    domain: server.org
     port: 1111
 
   - type: webContent
+    description: "Check3"
     url: https://
     content: TTTTTT
 
   - type: ssh
+    description: "Check4"
     host: PPPP
     port: 7777
     key: OOOOOOOOOOO

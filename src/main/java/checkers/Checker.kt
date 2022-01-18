@@ -1,7 +1,6 @@
 package checkers
 
-interface Checker {
-
-    fun check() : CheckResult
+abstract class Checker(val description: String) {
+    abstract fun check() : CheckResult
 }
 
