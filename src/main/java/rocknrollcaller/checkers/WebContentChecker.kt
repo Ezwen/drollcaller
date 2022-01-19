@@ -9,7 +9,7 @@ class WebContentChecker(
 ) : Checker {
 
     override fun check(): CheckResult {
-        val doc: Document = Jsoup.connect(url).timeout(timeout).ignoreContentType(true).get()
+        val doc: Document = Jsoup.connect(url).timeout(timeout).ignoreHttpErrors(true).ignoreContentType(true).get()
         val content = doc.body().text().trim { it <= ' ' }
         return if (content == expectedContent) {
             CheckResult(true)
