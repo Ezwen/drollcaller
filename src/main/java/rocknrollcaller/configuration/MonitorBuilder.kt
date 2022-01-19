@@ -15,6 +15,14 @@ class MonitorBuilder {
 
 
     fun createMonitorFromConfiguration(configuration: MonitoringConfiguration): Monitor {
+
+        val parsedTimeout: java.time.Duration =
+                if (!configuration.timeout.isNullOrEmpty()) {
+                    Duration.parse(configuration.timeout!!).toJavaDuration()
+                } else {
+                    java.time.Duration.ofSeconds(30)
+                }
+
         val timeZone = if (!configuration.timezone.isNullOrEmpty()) {
             ZoneId.of(configuration.timezone)
         } else {
@@ -26,7 +34,7 @@ class MonitorBuilder {
 
         if (!configuration.checks.isNullOrEmpty()) {
             for (checkerConfiguration in configuration.checks!!) {
-                checkers.add(createCheckerFromConfiguration(checkerConfiguration, configuration.timeout))
+                checkers.add(createCheckerFromConfiguration(checkerConfiguration, parsedTimeout.toMillis().toInt()))
             }
         }
 

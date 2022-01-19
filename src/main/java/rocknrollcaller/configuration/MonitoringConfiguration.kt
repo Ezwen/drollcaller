@@ -11,7 +11,7 @@ class MonitoringConfiguration {
     var periodicity: String? = null
     var sleep: Sleep? = null
     var checks: List<Check>? = null
-    var timeout: Int = 5000
+    var timeout: String? = null
     var description: String? = null
 }
 

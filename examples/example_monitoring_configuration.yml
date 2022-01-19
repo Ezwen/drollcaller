@@ -4,8 +4,8 @@ description: "Some monitoring"
 # Time zone to use to properly parse times and print logs
 timezone: "Asia/Tokyo"
 
-# Global timeout value to use when doing a checking action (passed to all checkers)
-timeout: 5000
+# (Optional, default 30s) Global timeout value for all checkers to use
+timeout: 10s
 
 # Duration between two periodic monitoring checks
 periodicity: 30m
