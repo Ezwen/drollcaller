@@ -1,0 +1,10 @@
+description: "Some monitoring"
+timezone: "Asia/Tokyo"
+periodicity: 30m
+
+checks:
+
+  - type: webTitle
+    description: "Check1"
+    url: https://...
+    title: UUUUUU
