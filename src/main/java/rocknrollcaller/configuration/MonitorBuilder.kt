@@ -15,21 +15,33 @@ class MonitorBuilder {
 
 
     fun createMonitorFromConfiguration(configuration: MonitoringConfiguration): Monitor {
+        val timeZone = if (!configuration.timezone.isNullOrEmpty()) {
+            ZoneId.of(configuration.timezone)
+        } else {
+            throw Exception("Configuration is missing 'timezone'")
+        }
 
-        val timeZone = ZoneId.of(configuration.timezone!!)
         val logger = Logger(timeZone)
-
         val checkers = mutableListOf<rocknrollcaller.checkers.Checker>()
-        for (checkerConfiguration in configuration.checks!!) {
-            checkers.add(createCheckerFromConfiguration(checkerConfiguration, configuration.timeout))
+
+        if (!configuration.checks.isNullOrEmpty()) {
+            for (checkerConfiguration in configuration.checks!!) {
+                checkers.add(createCheckerFromConfiguration(checkerConfiguration, configuration.timeout))
+            }
         }
 
         val notifiers = mutableListOf<rocknrollcaller.notifiers.Notifier>()
-        for (notifierConfiguration in configuration.notifiers!!) {
-            notifiers.add(createNotifierFromConfiguration(notifierConfiguration, logger))
+        if (!configuration.notifiers.isNullOrEmpty()) {
+            for (notifierConfiguration in configuration.notifiers!!) {
+                notifiers.add(createNotifierFromConfiguration(notifierConfiguration, logger))
+            }
         }
-
-        val periodicity: java.time.Duration = Duration.parse(configuration.periodicity!!).toJavaDuration()
+        val periodicity: java.time.Duration =
+        if (!configuration.periodicity.isNullOrEmpty()) {
+            Duration.parse(configuration.periodicity!!).toJavaDuration()
+        } else {
+            throw Exception("Configuration is missing 'periodicity'")
+        }
 
         val parsedFrom = if (configuration.sleep != null) LocalTime.parse(configuration.sleep!!.from!!) else null
         val parsedTo = if (configuration.sleep != null) LocalTime.parse(configuration.sleep!!.to!!) else null

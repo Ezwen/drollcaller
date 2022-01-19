@@ -1,15 +1,16 @@
 package rocknrollcaller.checkers
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+
 class WebContentChecker(
     val descript: String,
     val url: String, val expectedContent: String, val timeout: Int
 ) : Checker {
 
     override fun check(): CheckResult {
-        val driver = SilentHtmlUnitDriver(false, timeout)
-        driver.get(url)
-        val content = driver.pageSource.trim { it <= ' ' }
-        driver.close()
+        val doc: Document = Jsoup.connect(url).timeout(timeout).ignoreContentType(true).get()
+        val content = doc.body().text().trim { it <= ' ' }
         return if (content == expectedContent) {
             CheckResult(true)
         } else {

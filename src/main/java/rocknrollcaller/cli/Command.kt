@@ -11,16 +11,16 @@ import java.util.concurrent.Callable
 
 
 @CommandLine.Command(
-    name = "java -jar rocknrollcaller.jar",
-    description = ["Monitor periodically a set of services."],
-    mixinStandardHelpOptions = true,
-    version = [Constants.VERSION]
+        name = "java -jar rocknrollcaller.jar",
+        description = ["Monitor periodically a set of services."],
+        mixinStandardHelpOptions = true,
+        version = [Constants.VERSION]
 )
 class Command : Callable<Int> {
 
     @CommandLine.Parameters(
-        arity = "1..1",
-        description = ["The YAML monitoring configuration file."]
+            arity = "1..1",
+            description = ["The YAML monitoring configuration file."]
     )
     var configurationFilePath: Path? = null
 
@@ -29,7 +29,12 @@ class Command : Callable<Int> {
         val confPath = configurationFilePath!!.toFile()
         val confParsed = mapper.readValue(confPath, MonitoringConfiguration::class.java)
         val builder = MonitorBuilder()
-        val monitor = builder.createMonitorFromConfiguration(confParsed)
+        val monitor =
+                try {
+                    builder.createMonitorFromConfiguration(confParsed)
+                } catch (t: Throwable) {
+                    throw Exception("Could not create a monitor from the configuration file! Reason: " + t.message, t)
+                }
         monitor.start()
         return 0
     }

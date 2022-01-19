@@ -1,7 +1,7 @@
 package rocknrollcaller.util
 
 
-import com.google.gson.GsonBuilder
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -11,8 +11,8 @@ import java.io.StringWriter
  */
 object PrettyPrinter {
     fun prettyObject(obj: Any): String {
-        val gson = GsonBuilder().setPrettyPrinting().serializeNulls().create()
-        return obj::class.simpleName + gson.toJson(obj)
+        val mapper = ObjectMapper()
+        return obj::class.simpleName + " " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj)
     }
 
     fun prettyThrowable(e : Throwable) : String {

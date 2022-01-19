@@ -1,15 +1,16 @@
 package rocknrollcaller.checkers
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+
 class WebtitleChecker(
     val descript: String,
     val url: String, val expectedTitle: String, val timeout: Int
 ) : Checker {
 
     override fun check(): CheckResult {
-        val driver = SilentHtmlUnitDriver(false, timeout)
-        driver.get(url)
-        val title = driver.title
-        driver.close()
+        val doc: Document = Jsoup.connect(url).timeout(timeout).ignoreContentType(true).get()
+        val title = doc.title()
         return if (title.contains(expectedTitle)) {
             CheckResult(true)
         } else {
