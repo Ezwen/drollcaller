@@ -57,7 +57,7 @@ class Monitor(
                 runOnce()
                 logger.log("End of periodic monitoring checks.")
             } else {
-                logger.log("\uD83D\uDCA4️ In a sleeping period, not starting checsk.")
+                logger.log("\uD83D\uDCA4️ In a sleeping period, not starting checks.")
             }
             logger.log("Falling asleep. Next wakeup in ${periodicity.toKotlinDuration()}.")
             Thread.sleep(periodicity.toMillis())
