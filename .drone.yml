@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: docker
-name: rocknroller
+name: drollcaller
 
 steps:
 
@@ -12,5 +12,5 @@ steps:
       password:
         from_secret: drone_registry_passwd
       registry: registry.mandragot.org
-      repo: registry.mandragot.org/rocknroller
+      repo: registry.mandragot.org/drollcaller
       tags: latest

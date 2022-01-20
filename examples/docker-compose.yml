@@ -3,7 +3,7 @@ version: '3'
 services:
     monitor:
       build: ".."
-      image: "rocknrollcaller"
+      image: "drollcaller"
       restart: "unless-stopped"
       volumes:
         - "./example_monitoring_configuration.yml:/monitoring_configuration.yml:Z"

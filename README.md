@@ -1,4 +1,4 @@
-# Rocknrollcaller
+# drollcaller
 
 Very simple monitoring of online services.
 
@@ -27,7 +27,7 @@ mvn package
 Local docker image build:
 
 ```
-docker build -t rocknrollcaller_dev .
+docker build -t drollcaller_dev .
 ```
 
 ## Acknowledgments

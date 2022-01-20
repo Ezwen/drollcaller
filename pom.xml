@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.rocknrollcaller</groupId>
-    <artifactId>rocknrollcaller</artifactId>
+    <groupId>org.drollcaller</groupId>
+    <artifactId>drollcaller</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -159,7 +159,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>rocknrollcaller.main.MainKt</mainClass>
+                                    <mainClass>drollcaller.main.MainKt</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>

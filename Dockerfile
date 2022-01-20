@@ -9,5 +9,5 @@ COPY examples ./examples
 RUN mvn package
 
 FROM docker.io/openjdk:11
-COPY --from=0 /build/target/rocknrollcaller-1.0-SNAPSHOT-jar-with-dependencies.jar /app/rocknrollcaller.jar
-CMD java -jar /app/rocknrollcaller.jar /monitoring_configuration.yml
+COPY --from=0 /build/target/drollcaller-1.0-SNAPSHOT-jar-with-dependencies.jar /app/drollcaller.jar
+CMD java -jar /app/drollcaller.jar /monitoring_configuration.yml
