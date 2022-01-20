@@ -1,6 +1,6 @@
 # drollcaller
 
-Very simple monitoring of online services.
+A funny simple monitoring tool for online services.
 
 ## Installation
 
